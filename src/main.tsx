@@ -2,17 +2,8 @@
 declare const React: any;
 declare const ReactDOM: any;
 
-// Importa a view Home
-const Home = (window as any).Home || function() { 
-    return <div>Carregando...</div>; 
-};
-
 function App(): JSX.Element {
-    return (
-        <div>
-            <Home />
-        </div>
-    );
+    return <h1>Olá Mundo</h1>;
 }
 
 const rootElement = document.getElementById('root');

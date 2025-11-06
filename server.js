@@ -25,7 +25,8 @@ async function compileTS(filePath) {
             define: {
                 'React': 'window.React',
                 'ReactDOM': 'window.ReactDOM'
-            }
+            },
+            logLevel: 'error'
         });
         return result.outputFiles[0].text;
     } catch (error) {
@@ -77,4 +78,11 @@ const server = createServer(async (req, res) => {
 
 server.listen(PORT, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+}).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`❌ Porta ${PORT} já está em uso!`);
+    } else {
+        console.error('❌ Erro ao iniciar servidor:', err);
+        process.exit(1);
+    }
 });
