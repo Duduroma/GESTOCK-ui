@@ -1,7 +1,6 @@
-// Declara tipo global para React
-declare const React: any;
+// React 17+ com JSX automático não precisa importar React
 
-function Home(): JSX.Element {
+function Home(): React.ReactElement {
     return (
         <div>
             <h1>Olá Mundo</h1>
@@ -9,8 +8,5 @@ function Home(): JSX.Element {
         </div>
     );
 }
-
- 
- 
 
 export default Home;

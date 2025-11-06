@@ -1,6 +1,6 @@
-// Os tipos já estão definidos globalmente em src/types/global.d.ts
+import ReactDOM from 'react-dom/client';
 
-function App(): JSX.Element {
+function App(): React.ReactElement {
     return <h1>Olá Mundo</h1>;
 }
 

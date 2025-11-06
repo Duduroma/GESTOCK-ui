@@ -1,4 +1,4 @@
-// Os tipos já estão definidos globalmente em src/types/global.d.ts
+// React 17+ com JSX automático não precisa importar React
 
 interface ButtonProps {
     children: React.ReactNode;
@@ -6,7 +6,7 @@ interface ButtonProps {
     type?: 'button' | 'submit' | 'reset';
 }
 
-function Button({ children, onClick, type = 'button' }: ButtonProps): JSX.Element {
+function Button({ children, onClick, type = 'button' }: ButtonProps): React.ReactElement {
     return (
         <button type={type} onClick={onClick}>
             {children}

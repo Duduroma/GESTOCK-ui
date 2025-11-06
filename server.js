@@ -10,23 +10,18 @@ const __dirname = dirname(__filename);
 
 const PORT = 5173;
 
-// Compila um arquivo TypeScript
+// Compila um arquivo TypeScript com bundle (inclui React do npm)
 async function compileTS(filePath) {
     try {
         const result = await esbuild.build({
             entryPoints: [filePath],
-            bundle: false,
+            bundle: true,  // Agora faz bundle, incluindo React do node_modules
             format: 'iife',
             target: 'es2020',
-            jsx: 'transform',
-            jsxFactory: 'React.createElement',
-            jsxFragment: 'React.Fragment',
+            jsx: 'automatic',  // JSX automático do React 17+
             write: false,
-            define: {
-                'React': 'window.React',
-                'ReactDOM': 'window.ReactDOM'
-            },
-            logLevel: 'error'
+            logLevel: 'error',
+            platform: 'browser'
         });
         return result.outputFiles[0].text;
     } catch (error) {
