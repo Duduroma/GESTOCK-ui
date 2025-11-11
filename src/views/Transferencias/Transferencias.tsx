@@ -1,9 +1,23 @@
+import { useState } from 'react';
 import MainLayout from '../../components/MainLayout';
 import PageHeader from '../../components/PageHeader';
 import { Table, TableRow, TableCell } from '../../components/Table';
 import InfoBox from '../../components/InfoBox';
+import NovaTransferenciaModal from '../../components/Modals/NovaTransferenciaModal';
 
 function Transferencias(): React.ReactElement {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleConfirm = (data: {
+        produto: string;
+        estoqueOrigem: string;
+        estoqueDestino: string;
+        quantidade: string;
+        responsavel: string;
+    }) => {
+        console.log('Nova transferência:', data);
+    };
+
     return (
         <MainLayout>
             <PageHeader
@@ -11,7 +25,7 @@ function Transferencias(): React.ReactElement {
                 subtitle="Transfira produtos entre estoques do mesmo cliente"
                 actionButton={{
                     label: "Nova Transferência",
-                    onClick: () => console.log('Nova transferência'),
+                    onClick: () => setIsModalOpen(true),
                     icon: '+'
                 }}
             />
@@ -27,6 +41,12 @@ function Transferencias(): React.ReactElement {
                     'Movimentação de ENTRADA no estoque de destino'
                 ]}
                 variant="yellow"
+            />
+
+            <NovaTransferenciaModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handleConfirm}
             />
         </MainLayout>
     );
