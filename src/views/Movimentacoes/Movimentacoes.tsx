@@ -4,9 +4,22 @@ import { Table, TableRow, TableCell } from '../../components/Table';
 import SummaryCard from '../../components/SummaryCard';
 import Tabs from '../../components/Tabs';
 import { useState } from 'react';
+import RegistrarMovimentacaoModal from '../../components/Modals/RegistrarMovimentacaoModal';
 
 function Movimentacoes(): React.ReactElement {
     const [activeTab, setActiveTab] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleConfirm = (data: {
+        produto: string;
+        tipo: string;
+        estoque: string;
+        quantidade: string;
+        motivo: string;
+        responsavel: string;
+    }) => {
+        console.log('Registrar movimentação:', data);
+    };
 
     return (
         <MainLayout>
@@ -15,7 +28,7 @@ function Movimentacoes(): React.ReactElement {
                 subtitle="Registre e acompanhe entradas e saídas"
                 actionButton={{
                     label: "Registrar Movimentação",
-                    onClick: () => console.log('Registrar movimentação'),
+                    onClick: () => setIsModalOpen(true),
                     icon: '+'
                 }}
             />
@@ -54,6 +67,12 @@ function Movimentacoes(): React.ReactElement {
 
             <Table headers={['Data', 'Produto', 'Tipo', 'Quantidade', 'Motivo', 'Responsável', 'Estoque']} children={undefined}>
             </Table>
+
+            <RegistrarMovimentacaoModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onConfirm={handleConfirm}
+            />
         </MainLayout>
     );
 }
