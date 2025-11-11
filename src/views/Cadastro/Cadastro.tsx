@@ -1,4 +1,3 @@
-// Página de Cadastro
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthLayout from '../../components/AuthLayout';
@@ -14,7 +13,6 @@ function Cadastro(): React.ReactElement {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Cadastro:', { nome, email, senha });
-        // Aqui você fará a chamada à API
     };
 
     return (
@@ -76,7 +74,6 @@ function Cadastro(): React.ReactElement {
                     </button>
                 </form>
 
-                {/* Link para voltar ao login */}
                 <div style={{
                     textAlign: 'center',
                     marginTop: '24px',
