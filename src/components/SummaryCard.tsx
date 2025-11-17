@@ -7,11 +7,11 @@ interface SummaryCardProps {
 
 function SummaryCard({ title, value, subtitle, variant = 'default' }: SummaryCardProps): React.ReactElement {
     const variants = {
-        default: { bg: 'white', titleColor: '#6b7280', valueColor: '#1f2937' },
-        blue: { bg: 'white', titleColor: '#6b7280', valueColor: '#2563eb' },
-        green: { bg: 'white', titleColor: '#6b7280', valueColor: '#059669' },
-        red: { bg: 'white', titleColor: '#6b7280', valueColor: '#dc2626' },
-        yellow: { bg: '#fef3c7', titleColor: '#92400e', valueColor: '#78350f' }
+        default: { bg: 'white', borderColor: 'transparent', titleColor: '#6b7280', valueColor: '#1f2937' },
+        blue: { bg: '#dbeafe', borderColor: '#93c5fd', titleColor: '#1e40af', valueColor: '#1e40af' },
+        green: { bg: 'white', borderColor: 'transparent', titleColor: '#6b7280', valueColor: '#059669' },
+        red: { bg: '#fee2e2', borderColor: '#fca5a5', titleColor: '#991b1b', valueColor: '#991b1b' },
+        yellow: { bg: '#fef3c7', borderColor: '#fde68a', titleColor: '#92400e', valueColor: '#78350f' }
     };
 
     const style = variants[variant];
@@ -22,7 +22,7 @@ function SummaryCard({ title, value, subtitle, variant = 'default' }: SummaryCar
             borderRadius: '12px',
             padding: '24px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            border: variant === 'yellow' ? '1px solid #fde68a' : 'none'
+            border: `1px solid ${style.borderColor}`
         }}>
             <p style={{
                 fontSize: '14px',

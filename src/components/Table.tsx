@@ -43,12 +43,14 @@ function Table({ headers, children }: TableProps): React.ReactElement {
 
 interface TableRowProps {
     children: React.ReactNode;
+    highlighted?: boolean;
 }
 
-function TableRow({ children }: TableRowProps): React.ReactElement {
+function TableRow({ children, highlighted = false }: TableRowProps): React.ReactElement {
     return (
         <tr style={{
-            borderBottom: '1px solid #e5e7eb'
+            borderBottom: '1px solid #e5e7eb',
+            backgroundColor: highlighted ? '#f0fdf4' : 'transparent'
         }}>
             {children}
         </tr>
@@ -57,15 +59,21 @@ function TableRow({ children }: TableRowProps): React.ReactElement {
 
 interface TableCellProps {
     children: React.ReactNode;
+    colSpan?: number;
+    style?: React.CSSProperties;
 }
 
-function TableCell({ children }: TableCellProps): React.ReactElement {
+function TableCell({ children, colSpan, style }: TableCellProps): React.ReactElement {
     return (
-        <td style={{
-            padding: '16px',
-            fontSize: '14px',
-            color: '#1f2937'
-        }}>
+        <td 
+            colSpan={colSpan}
+            style={{
+                padding: '16px',
+                fontSize: '14px',
+                color: '#1f2937',
+                ...style
+            }}
+        >
             {children}
         </td>
     );

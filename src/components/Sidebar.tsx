@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import Logo from './Logo';
+import useBadgeCounts from '../hooks/useBadgeCounts';
 
 interface MenuItem {
     label: string;
@@ -16,15 +16,16 @@ interface SidebarProps {
 function Sidebar({ onLogout }: SidebarProps): React.ReactElement {
     const navigate = useNavigate();
     const location = useLocation();
+    const { pedidosPendentes, alertasAtivos } = useBadgeCounts();
 
     const menuItems: MenuItem[] = [
         { label: 'Estoques', path: '/estoques', icon: '📦' },
         { label: 'Produtos', path: '/produtos', icon: '🛒' },
         { label: 'Fornecedores', path: '/fornecedores', icon: '👥' },
         { label: 'Cotações', path: '/cotacoes', icon: '💰' },
-        { label: 'Pedidos', path: '/pedidos', icon: '📄', badge: 3, badgeColor: 'blue' },
+        { label: 'Pedidos', path: '/pedidos', icon: '📄', badge: pedidosPendentes > 0 ? pedidosPendentes : undefined, badgeColor: 'blue' },
         { label: 'Ponto de Ressuprimento', path: '/ponto-ressuprimento', icon: '📈' },
-        { label: 'Alertas', path: '/alertas', icon: '⚠️', badge: 2, badgeColor: 'red' },
+        { label: 'Alertas', path: '/alertas', icon: '⚠️', badge: alertasAtivos > 0 ? alertasAtivos : undefined, badgeColor: 'red' },
         { label: 'Movimentações', path: '/movimentacoes', icon: '📊' },
         { label: 'Transferências', path: '/transferencias', icon: '🔄' },
         { label: 'Reservas', path: '/reservas', icon: '🔒' }
