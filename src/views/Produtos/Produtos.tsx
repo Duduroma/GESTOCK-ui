@@ -8,7 +8,8 @@ import IconButton from '../../components/IconButton';
 import ActionButton from '../../components/ActionButton';
 import CadastrarProdutoModal from '../../components/Modals/CadastrarProdutoModal';
 import useTablePage from '../../hooks/useTablePage';
-import { Produto, ProdutoId } from '../../types/entities';
+import { Produto } from '../../types/entities';
+import { mockProdutos } from '../../utils/mocks';
 
 function Produtos(): React.ReactElement {
     const navigate = useNavigate();
@@ -16,35 +17,7 @@ function Produtos(): React.ReactElement {
         onView: () => navigate('/cotacoes')
     });
 
-    const [produtos, setProdutos] = useState<Produto[]>([
-        {
-            id: '1',
-            codigo: 'PROD001',
-            nome: 'Parafuso M6',
-            unidadePeso: 'g',
-            peso: 5.2,
-            perecivel: false,
-            ativo: true
-        },
-        {
-            id: '2',
-            codigo: 'PROD002',
-            nome: 'Tinta Branca',
-            unidadePeso: 'kg',
-            peso: 18.0,
-            perecivel: false,
-            ativo: true
-        },
-        {
-            id: '3',
-            codigo: 'PROD003',
-            nome: 'Cabo Elétrico',
-            unidadePeso: 'kg',
-            peso: 0.5,
-            perecivel: false,
-            ativo: true
-        }
-    ]);
+    const [produtos, setProdutos] = useState<Produto[]>(mockProdutos);
 
     const handleConfirm = (data: {
         codigo: string;

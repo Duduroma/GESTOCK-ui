@@ -6,34 +6,10 @@ import SummaryCard from '../../components/SummaryCard';
 import InfoBox from '../../components/InfoBox';
 import Badge from '../../components/Badge';
 import { Alerta, AlertaId, ProdutoId, EstoqueId, FornecedorId } from '../../types/entities';
+import { mockAlertas } from '../../utils/mocks';
 
 function Alertas(): React.ReactElement {
-    const [alertas, setAlertas] = useState<Alerta[]>([
-        {
-            id: '1',
-            produtoId: '1',
-            estoqueId: '2',
-            dataGeracao: '2025-10-18T10:00:00',
-            fornecedorSugerido: '3',
-            ativo: true
-        },
-        {
-            id: '2',
-            produtoId: '2',
-            estoqueId: '1',
-            dataGeracao: '2025-10-19T11:00:00',
-            fornecedorSugerido: '1',
-            ativo: true
-        },
-        {
-            id: '3',
-            produtoId: '3',
-            estoqueId: '2',
-            dataGeracao: '2025-10-20T09:00:00',
-            fornecedorSugerido: '2',
-            ativo: true
-        }
-    ]);
+    const [alertas, setAlertas] = useState<Alerta[]>(mockAlertas);
 
     const handleGerarPedido = (alertaId: AlertaId) => {
         console.log('pedido gerado');

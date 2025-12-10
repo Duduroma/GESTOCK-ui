@@ -13,7 +13,7 @@ function Login(): React.ReactElement {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Login:', { email, senha });
-        
+        navigate('/estoques');
     };
 
     return (
@@ -65,6 +65,7 @@ function Login(): React.ReactElement {
                     >
                         Entrar
                     </button>
+                    
                 </form>
 
                

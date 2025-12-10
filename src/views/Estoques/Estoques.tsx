@@ -8,8 +8,9 @@ import IconButton from '../../components/IconButton';
 import ActionButton from '../../components/ActionButton';
 import CadastrarEstoqueModal from '../../components/Modals/CadastrarEstoqueModal';
 import useTablePage from '../../hooks/useTablePage';
-import { Estoque, EstoqueId, ClienteId } from '../../types/entities';
+import { Estoque } from '../../types/entities';
 import Input from '../../components/Input';
+import { mockEstoques } from '../../utils/mocks';
 
 function Estoques(): React.ReactElement {
     const navigate = useNavigate();
@@ -17,32 +18,7 @@ function Estoques(): React.ReactElement {
         onView: () => navigate('/produtos')
     });
 
-    const [estoques, setEstoques] = useState<Estoque[]>([
-        {
-            id: '1',
-            clienteId: '1',
-            nome: 'Estoque Central',
-            endereco: 'Rua A, 100 - São Paulo',
-            capacidade: 10000,
-            ativo: true
-        },
-        {
-            id: '2',
-            clienteId: '1',
-            nome: 'Estoque Filial Norte',
-            endereco: 'Av. B, 200 - Guarulhos',
-            capacidade: 5000,
-            ativo: true
-        },
-        {
-            id: '3',
-            clienteId: '2',
-            nome: 'Estoque Temporário',
-            endereco: 'Rua C, 300 - Osasco',
-            capacidade: 2000,
-            ativo: false
-        }
-    ]);
+    const [estoques, setEstoques] = useState<Estoque[]>(mockEstoques);
 
     const [busca, setBusca] = useState('');
     const [filtroCliente, setFiltroCliente] = useState<string>('');

@@ -8,41 +8,11 @@ import ActionButton from '../../components/ActionButton';
 import Tabs from '../../components/Tabs';
 import InfoBox from '../../components/InfoBox';
 import { ReservaRegistro, TipoReservaRegistro, ProdutoId } from '../../types/entities';
+import { mockReservas } from '../../utils/mocks';
 
 function Reservas(): React.ReactElement {
     const [activeTab, setActiveTab] = useState(0);
-    const [reservas, setReservas] = useState<ReservaRegistro[]>([
-        {
-            produtoId: '1',
-            quantidade: 8500,
-            dataHora: '2025-10-17T10:00:00',
-            tipo: TipoReservaRegistro.RESERVA
-        },
-        {
-            produtoId: '2',
-            quantidade: 1200,
-            dataHora: '2025-10-18T11:00:00',
-            tipo: TipoReservaRegistro.RESERVA
-        },
-        {
-            produtoId: '3',
-            quantidade: 3800,
-            dataHora: '2025-10-12T09:00:00',
-            tipo: TipoReservaRegistro.LIBERACAO
-        },
-        {
-            produtoId: '4',
-            quantidade: 75,
-            dataHora: '2025-10-11T14:00:00',
-            tipo: TipoReservaRegistro.LIBERACAO
-        },
-        {
-            produtoId: '1',
-            quantidade: 6000,
-            dataHora: '2025-10-09T08:00:00',
-            tipo: TipoReservaRegistro.LIBERACAO
-        }
-    ]);
+    const [reservas, setReservas] = useState<ReservaRegistro[]>(mockReservas);
 
     const reservasAtivas = reservas.filter(r => r.tipo === TipoReservaRegistro.RESERVA);
     const reservasLiberadas = reservas.filter(r => r.tipo === TipoReservaRegistro.LIBERACAO);

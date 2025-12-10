@@ -6,41 +6,11 @@ import InfoBox from '../../components/InfoBox';
 import Badge from '../../components/Badge';
 import NovaTransferenciaModal from '../../components/Modals/NovaTransferenciaModal';
 import { Transferencia, ProdutoId, EstoqueId } from '../../types/entities';
+import { mockTransferencias } from '../../utils/mocks';
 
 function Transferencias(): React.ReactElement {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [transferencias, setTransferencias] = useState<Transferencia[]>([
-        {
-            id: 1,
-            produtoId: '1',
-            estoqueOrigemId: '1',
-            estoqueDestinoId: '2',
-            quantidade: 1800,
-            dataHora: '2025-10-22T10:00:00',
-            responsavel: 'Roberto Alves',
-            motivo: 'Transferência entre filiais'
-        },
-        {
-            id: 2,
-            produtoId: '2',
-            estoqueOrigemId: '1',
-            estoqueDestinoId: '3',
-            quantidade: 650,
-            dataHora: '2025-10-21T14:30:00',
-            responsavel: 'Ana Paula',
-            motivo: 'Reabastecimento'
-        },
-        {
-            id: 3,
-            produtoId: '3',
-            estoqueOrigemId: '2',
-            estoqueDestinoId: '1',
-            quantidade: 1200,
-            dataHora: '2025-10-20T09:15:00',
-            responsavel: 'Carlos Mendes',
-            motivo: 'Consolidação de estoque'
-        }
-    ]);
+    const [transferencias, setTransferencias] = useState<Transferencia[]>(mockTransferencias);
 
     const handleConfirm = (data: {
         produtoId: string;

@@ -8,62 +8,12 @@ import { useState, useMemo } from 'react';
 import RegistrarMovimentacaoModal from '../../components/Modals/RegistrarMovimentacaoModal';
 
 import { Movimentacao, TipoMovimentacao, ProdutoId } from '../../types/entities';
+import { mockMovimentacoes } from '../../utils/mocks';
 
 function Movimentacoes(): React.ReactElement {
     const [activeTab, setActiveTab] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [movimentacoes, setMovimentacoes] = useState<Movimentacao[]>([
-        {
-            id: 1,
-            tipo: TipoMovimentacao.ENTRADA,
-            produtoId: '1',
-            quantidade: 3500,
-            dataHora: '2025-10-22T10:00:00',
-            responsavel: 'Carlos Mendes',
-            motivo: 'Recebimento de Pedido #12',
-            meta: {}
-        },
-        {
-            id: 2,
-            tipo: TipoMovimentacao.SAIDA,
-            produtoId: '2',
-            quantidade: 850,
-            dataHora: '2025-10-21T14:30:00',
-            responsavel: 'Ana Paula',
-            motivo: 'Venda ao Cliente',
-            meta: {}
-        },
-        {
-            id: 3,
-            tipo: TipoMovimentacao.ENTRADA,
-            produtoId: '3',
-            quantidade: 2200,
-            dataHora: '2025-10-20T09:15:00',
-            responsavel: 'Roberto Alves',
-            motivo: 'Recebimento de Pedido #11',
-            meta: {}
-        },
-        {
-            id: 4,
-            tipo: TipoMovimentacao.SAIDA,
-            produtoId: '4',
-            quantidade: 35,
-            dataHora: '2025-10-19T16:45:00',
-            responsavel: 'Fernanda Lima',
-            motivo: 'Transferência para Filial',
-            meta: {}
-        },
-        {
-            id: 5,
-            tipo: TipoMovimentacao.ENTRADA,
-            produtoId: '1',
-            quantidade: 8000,
-            dataHora: '2025-10-18T11:20:00',
-            responsavel: 'Carlos Mendes',
-            motivo: 'Recebimento de Pedido #10',
-            meta: {}
-        }
-    ]);
+    const [movimentacoes, setMovimentacoes] = useState<Movimentacao[]>(mockMovimentacoes);
 
     const movimentacoesFiltradas = useMemo(() => {
         switch (activeTab) {

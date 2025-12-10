@@ -9,6 +9,7 @@ import ActionButton from '../../components/ActionButton';
 import CadastrarFornecedorModal from '../../components/Modals/CadastrarFornecedorModal';
 import useTablePage from '../../hooks/useTablePage';
 import { Fornecedor, FornecedorId, LeadTime } from '../../types/entities';
+import { mockFornecedores } from '../../utils/mocks';
 
 function Fornecedores(): React.ReactElement {
     const navigate = useNavigate();
@@ -16,35 +17,7 @@ function Fornecedores(): React.ReactElement {
         onView: () => navigate('/cotacoes')
     });
 
-    const [fornecedores, setFornecedores] = useState<Fornecedor[]>([
-        {
-            id: '1',
-            nome: 'Fornecedor ABC',
-            cnpj: '12.345.678/0001-90',
-            contato: '(11) 99999-9999',
-            leadTimeMedio: { dias: 7 },
-            ativo: true,
-            cotacoes: {}
-        },
-        {
-            id: '2',
-            nome: 'Fornecedor XYZ',
-            cnpj: '98.765.432/0001-10',
-            contato: '(11) 88888-8888',
-            leadTimeMedio: { dias: 14 },
-            ativo: true,
-            cotacoes: {}
-        },
-        {
-            id: '3',
-            nome: 'Fornecedor Temporário',
-            cnpj: '11.222.333/0001-44',
-            contato: '(11) 77777-7777',
-            leadTimeMedio: { dias: 5 },
-            ativo: false,
-            cotacoes: {}
-        }
-    ]);
+    const [fornecedores, setFornecedores] = useState<Fornecedor[]>(mockFornecedores);
 
     const handleConfirm = (data: {
         nome: string;

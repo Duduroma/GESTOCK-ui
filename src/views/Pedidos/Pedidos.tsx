@@ -6,48 +6,12 @@ import Badge from '../../components/Badge';
 import ActionButton from '../../components/ActionButton';
 import InfoBox from '../../components/InfoBox';
 import CriarPedidoModal from '../../components/Modals/CriarPedidoModal';
-import { Pedido, PedidoId, StatusPedido, ItemPedido, ClienteId, FornecedorId, EstoqueId } from '../../types/entities';
+import { Pedido, PedidoId, StatusPedido, ItemPedido } from '../../types/entities';
+import { mockPedidos } from '../../utils/mocks';
 
 function Pedidos(): React.ReactElement {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [pedidos, setPedidos] = useState<Pedido[]>([
-        {
-            id: '1',
-            clienteId: '1',
-            fornecedorId: '2',
-            dataCriacao: '2025-10-15',
-            dataPrevistaEntrega: '2025-10-21',
-            estoqueId: '1',
-            itens: [
-                { produtoId: '1', quantidade: 10000, precoUnitario: 0.50 }
-            ],
-            status: StatusPedido.RECEBIDO
-        },
-        {
-            id: '2',
-            clienteId: '1',
-            fornecedorId: '3',
-            dataCriacao: '2025-10-20',
-            dataPrevistaEntrega: '2025-10-26',
-            estoqueId: '1',
-            itens: [
-                { produtoId: '2', quantidade: 50, precoUnitario: 85.00 }
-            ],
-            status: StatusPedido.ENVIADO
-        },
-        {
-            id: '3',
-            clienteId: '1',
-            fornecedorId: '1',
-            dataCriacao: '2025-10-18',
-            dataPrevistaEntrega: '2025-10-23',
-            estoqueId: '2',
-            itens: [
-                { produtoId: '1', quantidade: 5000, precoUnitario: 0.45 }
-            ],
-            status: StatusPedido.CRIADO
-        }
-    ]);
+    const [pedidos, setPedidos] = useState<Pedido[]>(mockPedidos);
 
     const handleConfirm = (data: {
         clienteId: string;

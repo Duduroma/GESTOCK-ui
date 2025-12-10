@@ -6,39 +6,12 @@ import Badge from '../../components/Badge';
 import ActionButton from '../../components/ActionButton';
 import Card from '../../components/Card';
 import { Estoque, ROP, ProdutoId } from '../../types/entities';
+import { mockEstoques } from '../../utils/mocks';
 
 function PontoRessuprimento(): React.ReactElement {
     const [expandedRow, setExpandedRow] = useState<ProdutoId | null>(null);
 
-    const estoques: Estoque[] = [
-        {
-            id: '1',
-            clienteId: '1',
-            nome: 'Estoque Central',
-            endereco: 'Rua A, 100',
-            capacidade: 10000,
-            ativo: true,
-            rops: {
-                '1': {
-                    consumoMedio: 150,
-                    leadTimeDias: 7,
-                    estoqueSeguranca: 300,
-                    valorROP: 1350
-                },
-                '2': {
-                    consumoMedio: 5,
-                    leadTimeDias: 10,
-                    estoqueSeguranca: 20,
-                    valorROP: 70
-                }
-            },
-            saldos: {
-                '1': { fisico: 5000, reservado: 0, disponivel: 5000 },
-                '2': { fisico: 150, reservado: 0, disponivel: 150 },
-                '3': { fisico: 0, reservado: 0, disponivel: 0 }
-            }
-        }
-    ];
+    const estoques: Estoque[] = mockEstoques.filter(e => e.ativo && e.rops && Object.keys(e.rops).length > 0);
 
     return (
         <MainLayout>

@@ -5,39 +5,11 @@ import { Table, TableRow, TableCell } from '../../components/Table';
 import Badge from '../../components/Badge';
 import ApproveButton from './ApproveButton';
 import InfoBox from '../../components/InfoBox';
-import { Cotacao, CotacaoId, ProdutoId } from '../../types/entities';
+import { Cotacao, CotacaoId } from '../../types/entities';
+import { mockCotacoes } from '../../utils/mocks';
 
 function Cotacoes(): React.ReactElement {
-    const [cotacoes, setCotacoes] = useState<Cotacao[]>([
-        {
-            id: '1',
-            produtoId: '1',
-            preco: 0.50,
-            prazoDias: 7,
-            validadeAtiva: true
-        },
-        {
-            id: '2',
-            produtoId: '1',
-            preco: 0.45,
-            prazoDias: 5,
-            validadeAtiva: true
-        },
-        {
-            id: '3',
-            produtoId: '2',
-            preco: 85.00,
-            prazoDias: 10,
-            validadeAtiva: true
-        },
-        {
-            id: '4',
-            produtoId: '3',
-            preco: 12.50,
-            prazoDias: 7,
-            validadeAtiva: false
-        }
-    ]);
+    const [cotacoes] = useState<Cotacao[]>(mockCotacoes);
 
     const [cotacoesAprovadas, setCotacoesAprovadas] = useState<Set<CotacaoId>>(new Set());
 
