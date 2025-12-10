@@ -8,7 +8,7 @@ import { createWriteStream } from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PORT = process.env.PORT || 3000; // Usa variável de ambiente ou porta 3000
+const PORT = process.env.PORT || 8888; // Usa variável de ambiente ou porta 8888
 
 // Compila um arquivo TypeScript com bundle (inclui React do npm)
 async function compileTS(filePath) {
