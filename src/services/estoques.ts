@@ -59,7 +59,7 @@ export const estoquesService = {
     },
 
     deletar: async (id: EstoqueId): Promise<void> => {
-        return api.delete(`/estoques/${id}`);
+        return api.delete(`/estoques/apagar/${id}`);
     },
 
     obterSaldo: async (estoqueId: EstoqueId, produtoId: ProdutoId): Promise<SaldoProduto> => {

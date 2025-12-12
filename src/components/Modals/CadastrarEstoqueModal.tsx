@@ -86,7 +86,9 @@ function CadastrarEstoqueModal({ isOpen, onClose, onConfirm, initialData }: Cada
                 onChange={(e) => setClienteId(e.target.value)}
                 options={[
                     { value: '1', label: 'Cliente 1' },
-                    { value: '2', label: 'Cliente 2' }
+                    { value: '2', label: 'Cliente 2' },
+                    { value: '3', label: 'Cliente 3' },
+                    { value: '4', label: 'Cliente 4' }
                 ]}
                 required
             />

@@ -45,7 +45,8 @@ function useTablePage<T extends { id: string }>(options?: UseTablePageOptions<T>
         handleEditar,
         handleDeletar,
         handleView,
-        setItemEditando
+        setItemEditando,
+        setIsModalOpen
     };
 }
 

@@ -84,17 +84,11 @@ function Pedidos(): React.ReactElement {
                                     label="Confirmar Recebimento"
                                     icon="✓"
                                     onClick={() => handleConfirmRecebimento(pedido.id)}
-                                    disabled={pedido.status === StatusPedido.RECEBIDO || pedido.status === StatusPedido.CANCELADO}
                                 />
                                 <ActionButton
                                     label="Cancelar"
                                     icon="✕"
                                     onClick={() => handleCancelar(pedido.id)}
-                                    disabled={
-                                        pedido.status === StatusPedido.RECEBIDO || 
-                                        pedido.status === StatusPedido.CANCELADO ||
-                                        pedido.status === StatusPedido.EM_TRANSPORTE
-                                    }
                                 />
                             </div>
                         </TableCell>

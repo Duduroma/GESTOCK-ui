@@ -29,9 +29,11 @@ function Estoques(): React.ReactElement {
                 console.log('📦 Tipo da resposta:', Array.isArray(response) ? 'Array' : 'Objeto');
                 // Trata resposta paginada ou array direto
                 const estoquesData = Array.isArray(response) ? response : (response.content || []);
-                console.log('📋 Estoques processados:', estoquesData);
-                console.log('🔢 Quantidade de estoques:', estoquesData.length);
-                setEstoques(estoquesData);
+                // Filtra valores null/undefined
+                const estoquesValidos = estoquesData.filter(estoque => estoque != null && estoque.id != null);
+                console.log('📋 Estoques processados:', estoquesValidos);
+                console.log('🔢 Quantidade de estoques válidos:', estoquesValidos.length);
+                setEstoques(estoquesValidos);
             } catch (err) {
                 console.error('❌ Erro ao carregar estoques:', err);
                 console.error('❌ Detalhes do erro:', JSON.stringify(err, null, 2));
@@ -45,14 +47,68 @@ function Estoques(): React.ReactElement {
         carregarEstoques();
     }, []);
     
-    const { isModalOpen, itemEditando: estoqueEditando, openModal, closeModal, handleEditar, handleDeletar, handleView, setItemEditando } = useTablePage<Estoque>({
+    const handleEditarEstoque = async (itemId: string) => {
+        try {
+            console.log('📖 Buscando estoque atualizado do backend:', itemId);
+            console.log('📡 Chamando GET /estoques/' + itemId);
+            const estoqueAtualizado = await estoquesService.buscarPorId(itemId);
+            console.log('✅ Estoque carregado do backend:', estoqueAtualizado);
+            
+            if (!estoqueAtualizado || !estoqueAtualizado.id) {
+                console.error('❌ Estoque retornado é inválido:', estoqueAtualizado);
+                alert('Erro: Estoque não encontrado ou dados inválidos.');
+                return;
+            }
+            
+            setItemEditando(estoqueAtualizado);
+            setIsModalOpen(true);
+        } catch (err) {
+            console.error('❌ Erro ao buscar estoque:', err);
+            console.error('❌ Detalhes do erro:', JSON.stringify(err, null, 2));
+            alert('Erro ao carregar dados do estoque. Tente novamente.');
+        }
+    };
+
+    const recarregarEstoques = async () => {
+        try {
+            console.log('🔄 Recarregando lista de estoques do backend...');
+            setLoading(true);
+            const response = await estoquesService.listar();
+            console.log('📥 Resposta completa do backend:', response);
+            const estoquesData = Array.isArray(response) ? response : (response.content || []);
+            console.log('📋 Estoques extraídos:', estoquesData);
+            console.log('🔍 Verificando campo ativo de cada estoque:');
+            estoquesData.forEach((estoque, index) => {
+                console.log(`  Estoque ${index}: id=${estoque?.id}, ativo=${estoque?.ativo}, nome=${estoque?.nome}`);
+            });
+            // Filtra valores null/undefined
+            const estoquesValidos = estoquesData.filter(estoque => estoque != null && estoque.id != null);
+            console.log('✅ Lista recarregada:', estoquesValidos.length, 'estoques válidos');
+            console.log('📊 Resumo de status:', {
+                ativos: estoquesValidos.filter(e => e.ativo === true).length,
+                inativos: estoquesValidos.filter(e => e.ativo === false).length,
+                undefined: estoquesValidos.filter(e => e.ativo === undefined).length
+            });
+            setEstoques(estoquesValidos);
+        } catch (err) {
+            console.error('❌ Erro ao recarregar estoques:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const { isModalOpen, itemEditando: estoqueEditando, openModal, closeModal, handleDeletar, handleView, setItemEditando, setIsModalOpen } = useTablePage<Estoque>({
         onView: () => navigate('/produtos'),
         onDelete: async (itemId: string) => {
             try {
                 console.log('🗑️ Deletando estoque:', itemId);
+                console.log('📡 Chamando DELETE /estoques/apagar/' + itemId);
+                console.log('📋 Estado atual dos estoques ANTES de deletar:', estoques);
                 await estoquesService.deletar(itemId);
-                console.log('✅ Estoque deletado com sucesso');
-                setEstoques(estoques.filter(estoque => estoque.id !== itemId));
+                console.log('✅ Estoque deletado com sucesso no backend');
+                console.log('🔄 Recarregando lista de estoques...');
+                await recarregarEstoques();
+                console.log('📋 Estado atual dos estoques DEPOIS de recarregar:', estoques);
             } catch (err) {
                 console.error('❌ Erro ao deletar estoque:', err);
                 console.error('❌ Detalhes do erro:', JSON.stringify(err, null, 2));
@@ -65,17 +121,34 @@ function Estoques(): React.ReactElement {
     const [filtroCliente, setFiltroCliente] = useState<string>('');
     const [filtroStatus, setFiltroStatus] = useState<string>('');
 
+    const clientes = [
+        { id: '1', nome: 'Cliente 1' },
+        { id: '2', nome: 'Cliente 2' },
+        { id: '3', nome: 'Cliente 3' },
+        { id: '4', nome: 'Cliente 4' }
+    ];
+
     const estoquesFiltrados = useMemo(() => {
-        return estoques.filter(estoque => {
-            const matchBusca = !busca || 
-                estoque.nome.toLowerCase().includes(busca.toLowerCase()) ||
-                estoque.endereco.toLowerCase().includes(busca.toLowerCase());
-            const matchCliente = !filtroCliente || estoque.clienteId === filtroCliente;
-            const matchStatus = !filtroStatus || 
-                (filtroStatus === 'ativo' && estoque.ativo) ||
-                (filtroStatus === 'inativo' && !estoque.ativo);
-            return matchBusca && matchCliente && matchStatus;
-        });
+        console.log('🔍 Aplicando filtros:', { busca, filtroCliente, filtroStatus });
+        const filtrados = estoques
+            .filter(estoque => estoque != null && estoque.id != null)
+            .filter(estoque => {
+                const matchBusca = !busca || 
+                    (estoque.nome && estoque.nome.toLowerCase().includes(busca.toLowerCase())) ||
+                    (estoque.endereco && estoque.endereco.toLowerCase().includes(busca.toLowerCase()));
+                const matchCliente = !filtroCliente || estoque.clienteId === filtroCliente;
+                const matchStatus = !filtroStatus || 
+                    (filtroStatus === 'ativo' && estoque.ativo) ||
+                    (filtroStatus === 'inativo' && !estoque.ativo);
+                
+                const resultado = matchBusca && matchCliente && matchStatus;
+                if (filtroCliente && resultado) {
+                    console.log(`✅ Estoque ${estoque.id} passou no filtro de cliente ${filtroCliente}`);
+                }
+                return resultado;
+            });
+        console.log(`📊 Total de estoques filtrados: ${filtrados.length} de ${estoques.length}`);
+        return filtrados;
     }, [estoques, busca, filtroCliente, filtroStatus]);
 
     const handleConfirm = async (data: {
@@ -88,6 +161,7 @@ function Estoques(): React.ReactElement {
         try {
             if (estoqueEditando) {
                 console.log('✏️ Editando estoque:', estoqueEditando.id);
+                console.log('📡 Chamando PUT /estoques/' + estoqueEditando.id);
                 console.log('📝 Dados para atualizar:', data);
                 const estoqueAtualizado = await estoquesService.atualizar(estoqueEditando.id, {
                     nome: data.nome,
@@ -96,9 +170,13 @@ function Estoques(): React.ReactElement {
                     ativo: data.ativo
                 });
                 console.log('✅ Estoque atualizado com sucesso:', estoqueAtualizado);
-                setEstoques(estoques.map(estoque => 
-                    estoque.id === estoqueEditando.id ? estoqueAtualizado : estoque
-                ));
+                if (estoqueAtualizado && estoqueAtualizado.id) {
+                    setEstoques(estoques
+                        .filter(estoque => estoque != null && estoque.id != null)
+                        .map(estoque => 
+                            estoque.id === estoqueEditando.id ? estoqueAtualizado : estoque
+                        ));
+                }
                 setItemEditando(null);
             } else {
                 console.log('➕ Criando novo estoque...');
@@ -111,7 +189,9 @@ function Estoques(): React.ReactElement {
                     ativo: data.ativo
                 });
                 console.log('✅ Estoque criado com sucesso:', novoEstoque);
-                setEstoques([...estoques, novoEstoque]);
+                if (novoEstoque && novoEstoque.id) {
+                    setEstoques([...estoques.filter(e => e != null && e.id != null), novoEstoque]);
+                }
             }
         } catch (err) {
             console.error('❌ Erro ao salvar estoque:', err);
@@ -165,7 +245,11 @@ function Estoques(): React.ReactElement {
                     </label>
                     <select
                         value={filtroCliente}
-                        onChange={(e) => setFiltroCliente(e.target.value)}
+                        onChange={(e) => {
+                            const clienteId = String(e.target.value);
+                            console.log('🔽 Filtro de cliente alterado para:', clienteId);
+                            setFiltroCliente(clienteId);
+                        }}
                         style={{
                             width: '100%',
                             padding: '8px 12px',
@@ -175,8 +259,11 @@ function Estoques(): React.ReactElement {
                         }}
                     >
                         <option value="">Todos</option>
-                        <option value="1">Cliente 1</option>
-                        <option value="2">Cliente 2</option>
+                        {clientes.map(cliente => (
+                            <option key={cliente.id} value={cliente.id}>
+                                {cliente.nome}
+                            </option>
+                        ))}
                     </select>
                 </div>
                 <div style={{ minWidth: '150px' }}>
@@ -229,11 +316,13 @@ function Estoques(): React.ReactElement {
                             </TableCell>
                         </TableRow>
                     ) : (
-                        estoquesFiltrados.map((estoque) => (
+                        estoquesFiltrados
+                            .filter(estoque => estoque != null && estoque.id != null)
+                            .map((estoque) => (
                             <TableRow key={estoque.id}>
-                                <TableCell>{estoque.nome}</TableCell>
-                                <TableCell>{estoque.endereco}</TableCell>
-                                <TableCell>{estoque.capacidade.toLocaleString('pt-BR')}</TableCell>
+                                <TableCell>{estoque.nome || '-'}</TableCell>
+                                <TableCell>{estoque.endereco || '-'}</TableCell>
+                                <TableCell>{estoque.capacidade ? estoque.capacidade.toLocaleString('pt-BR') : '-'}</TableCell>
                                 <TableCell>
                                     <Badge variant={estoque.ativo ? 'approved' : 'expired'}>
                                         {estoque.ativo ? 'Ativo' : 'Inativo'}
@@ -252,7 +341,7 @@ function Estoques(): React.ReactElement {
                                         />
                                         <IconButton
                                             icon="✏️"
-                                            onClick={() => handleEditar(estoque.id, estoques)}
+                                            onClick={() => handleEditarEstoque(estoque.id)}
                                             ariaLabel="Editar estoque"
                                         />
                                         <IconButton
@@ -272,12 +361,12 @@ function Estoques(): React.ReactElement {
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 onConfirm={handleConfirm}
-                initialData={estoqueEditando ? {
-                    clienteId: estoqueEditando.clienteId,
-                    nome: estoqueEditando.nome,
-                    endereco: estoqueEditando.endereco,
-                    capacidade: estoqueEditando.capacidade,
-                    ativo: estoqueEditando.ativo
+                initialData={estoqueEditando && estoqueEditando.id ? {
+                    clienteId: estoqueEditando.clienteId || '',
+                    nome: estoqueEditando.nome || '',
+                    endereco: estoqueEditando.endereco || '',
+                    capacidade: estoqueEditando.capacidade || 0,
+                    ativo: estoqueEditando.ativo ?? true
                 } : null}
             />
         </MainLayout>
