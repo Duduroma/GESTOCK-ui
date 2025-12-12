@@ -8,7 +8,7 @@ import { createWriteStream } from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const PORT = process.env.PORT || 8888; // Usa variável de ambiente ou porta 8888
+const PORT = process.env.PORT || 9000; // Usa variável de ambiente ou porta 9000
 
 // Compila um arquivo TypeScript com bundle (inclui React do npm)
 async function compileTS(filePath) {
@@ -32,6 +32,7 @@ async function compileTS(filePath) {
 
 // Servidor HTTP simples
 const server = createServer(async (req, res) => {
+    
     let filePath = join(__dirname, req.url === '/' ? '/index.html' : req.url);
     
     // Remove query string

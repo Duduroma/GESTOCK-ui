@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 function getAuthToken(): string | null {
     return localStorage.getItem('authToken');
@@ -36,22 +36,40 @@ async function request(endpoint: string, options: RequestOptions = {}): Promise<
         headers,
     };
 
+    console.log('🌐 [API] Fazendo requisição:', {
+        method: config.method || 'GET',
+        url: url,
+        headers: headers,
+        body: config.body ? JSON.parse(config.body as string) : undefined
+    });
+
     try {
         const response = await fetch(url, config);
         
+        console.log('📥 [API] Resposta recebida:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries())
+        });
+        
         if (response.status === 204) {
+            console.log('✅ [API] Resposta 204 (No Content)');
             return null;
         }
         
         const data = await response.json();
+        console.log('📦 [API] Dados da resposta:', data);
         
         if (!response.ok) {
+            console.error('❌ [API] Erro na resposta:', data);
             throw new Error(data.message || 'Erro na requisição');
         }
         
+        console.log('✅ [API] Requisição bem-sucedida');
         return data;
     } catch (error) {
-        console.error('Erro na requisição:', error);
+        console.error('❌ [API] Erro na requisição:', error);
+        console.error('❌ [API] URL que falhou:', url);
         throw error;
     }
 }
