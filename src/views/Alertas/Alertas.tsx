@@ -5,16 +5,45 @@ import { Table, TableRow, TableCell } from '../../components/Table';
 import SummaryCard from '../../components/SummaryCard';
 import InfoBox from '../../components/InfoBox';
 import Badge from '../../components/Badge';
-import { Alerta, AlertaId, ProdutoId, EstoqueId, FornecedorId } from '../../types/entities';
+import { Alerta, AlertaId } from '../../types/entities';
 
-const alertasMockados: Alerta[] = [
+// NOTA: Este componente está usando dados mockados e não faz chamadas ao backend
+
+const produtosMock = [
+    { id: '1', nome: 'Arroz Tipo 1 - 5kg' },
+    { id: '2', nome: 'Feijão Carioca - 1kg' },
+    { id: '3', nome: 'Açúcar Cristal - 1kg' },
+    { id: '4', nome: 'Óleo de Soja - 900ml' },
+    { id: '5', nome: 'Macarrão Espaguete - 500g' },
+    { id: '6', nome: 'Leite Integral - 1L' },
+    { id: '7', nome: 'Café Torrado - 500g' }
+];
+
+const estoquesMock = [
+    { id: '1', nome: 'Estoque Central' },
+    { id: '2', nome: 'Estoque Norte' },
+    { id: '3', nome: 'Estoque Sul' }
+];
+
+const fornecedoresMock = [
+    { id: '1', nome: 'Distribuidora ABC' },
+    { id: '2', nome: 'Atacadão XYZ' },
+    { id: '3', nome: 'Mercado Atacado' }
+];
+
+// Dados mockados - 5 alertas falsos para exibição
+const alertasMockados: (Alerta & { produtoNome?: string; estoqueNome?: string; fornecedorNome?: string; nivel?: 'critico' | 'alto' | 'medio' })[] = [
     {
         id: '1',
         produtoId: '1',
         estoqueId: '1',
         dataGeracao: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
         fornecedorSugerido: '1',
-        ativo: true
+        ativo: true,
+        produtoNome: produtosMock[0].nome,
+        estoqueNome: estoquesMock[0].nome,
+        fornecedorNome: fornecedoresMock[0].nome,
+        nivel: 'critico'
     },
     {
         id: '2',
@@ -22,15 +51,23 @@ const alertasMockados: Alerta[] = [
         estoqueId: '1',
         dataGeracao: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
         fornecedorSugerido: '2',
-        ativo: true
+        ativo: true,
+        produtoNome: produtosMock[1].nome,
+        estoqueNome: estoquesMock[0].nome,
+        fornecedorNome: fornecedoresMock[1].nome,
+        nivel: 'critico'
     },
     {
         id: '3',
         produtoId: '3',
-        estoqueId: '1',
+        estoqueId: '2',
         dataGeracao: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
         fornecedorSugerido: '1',
-        ativo: true
+        ativo: true,
+        produtoNome: produtosMock[2].nome,
+        estoqueNome: estoquesMock[1].nome,
+        fornecedorNome: fornecedoresMock[0].nome,
+        nivel: 'alto'
     },
     {
         id: '4',
@@ -38,41 +75,48 @@ const alertasMockados: Alerta[] = [
         estoqueId: '1',
         dataGeracao: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
         fornecedorSugerido: '3',
-        ativo: true
+        ativo: true,
+        produtoNome: produtosMock[3].nome,
+        estoqueNome: estoquesMock[0].nome,
+        fornecedorNome: fornecedoresMock[2].nome,
+        nivel: 'alto'
     },
     {
         id: '5',
         produtoId: '5',
-        estoqueId: '1',
+        estoqueId: '3',
         dataGeracao: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
         fornecedorSugerido: '2',
-        ativo: true
+        ativo: true,
+        produtoNome: produtosMock[4].nome,
+        estoqueNome: estoquesMock[2].nome,
+        fornecedorNome: fornecedoresMock[1].nome,
+        nivel: 'medio'
     }
 ];
 
+type AlertaCompleto = Alerta & { 
+    produtoNome?: string; 
+    estoqueNome?: string; 
+    fornecedorNome?: string; 
+    nivel?: 'critico' | 'alto' | 'medio' 
+};
+
 function Alertas(): React.ReactElement {
-    const [alertas, setAlertas] = useState<Alerta[]>([]);
+    const [alertas, setAlertas] = useState<AlertaCompleto[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const carregarAlertas = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
-                setAlertas([...alertasMockados]);
-                setLoading(false);
-            } catch (err) {
-                setError(null);
-                setAlertas([...alertasMockados]);
-                setLoading(false);
-            }
-        };
+        // Carrega apenas dados mockados - SEM chamadas ao backend
+        setLoading(true);
+        
+        // Simula um pequeno delay
+        const timer = setTimeout(() => {
+            setAlertas([...alertasMockados]);
+            setLoading(false);
+        }, 200);
 
-        carregarAlertas();
+        return () => clearTimeout(timer);
     }, []);
 
     const handleGerarPedido = async (alertaId: AlertaId) => {
@@ -88,9 +132,9 @@ function Alertas(): React.ReactElement {
     };
 
     const alertasAtivos = alertas.filter(a => a.ativo);
-    const alertasCriticos = 2;
-    const alertasAltos = 2;
-    const alertasMedios = 1;
+    const alertasCriticos = alertasAtivos.filter(a => a.nivel === 'critico').length;
+    const alertasAltos = alertasAtivos.filter(a => a.nivel === 'alto').length;
+    const alertasMedios = alertasAtivos.filter(a => a.nivel === 'medio').length;
 
     return (
         <MainLayout>
@@ -128,20 +172,9 @@ function Alertas(): React.ReactElement {
                 </div>
             )}
 
-            {error && (
-                <div style={{ 
-                    padding: '16px', 
-                    backgroundColor: '#fee2e2', 
-                    border: '1px solid #fca5a5', 
-                    borderRadius: '6px', 
-                    color: '#991b1b',
-                    marginBottom: '24px'
-                }}>
-                    {error}
-                </div>
-            )}
+            {/* Mensagem de erro removida - usando apenas dados mockados */}
 
-            {!loading && !error && (
+            {!loading && (
                 <Table headers={['Produto', 'Estoque', 'Fornecedor Sugerido', 'Data do Alerta', 'Ações']}>
                     {alertasAtivos.length === 0 ? (
                         <TableRow>
@@ -152,9 +185,22 @@ function Alertas(): React.ReactElement {
                     ) : (
                         alertasAtivos.map((alerta) => (
                     <TableRow key={alerta.id}>
-                        <TableCell>Produto {alerta.produtoId}</TableCell>
-                        <TableCell>Estoque {alerta.estoqueId}</TableCell>
-                        <TableCell>{alerta.fornecedorSugerido ? `Fornecedor ${alerta.fornecedorSugerido}` : 'N/A'}</TableCell>
+                        <TableCell>
+                            <div>
+                                <div style={{ fontWeight: '500', marginBottom: '4px' }}>
+                                    {alerta.produtoNome || `Produto ${alerta.produtoId}`}
+                                </div>
+                                {alerta.nivel && (
+                                    <Badge 
+                                        variant={alerta.nivel === 'critico' ? 'critical' : alerta.nivel === 'alto' ? 'pending' : 'medium'}
+                                    >
+                                        {alerta.nivel === 'critico' ? 'Crítico' : alerta.nivel === 'alto' ? 'Alto' : 'Médio'}
+                                    </Badge>
+                                )}
+                            </div>
+                        </TableCell>
+                        <TableCell>{alerta.estoqueNome || `Estoque ${alerta.estoqueId}`}</TableCell>
+                        <TableCell>{alerta.fornecedorNome || (alerta.fornecedorSugerido ? `Fornecedor ${alerta.fornecedorSugerido}` : 'N/A')}</TableCell>
                         <TableCell>{new Date(alerta.dataGeracao).toLocaleString('pt-BR')}</TableCell>
                         <TableCell>
                             <button
