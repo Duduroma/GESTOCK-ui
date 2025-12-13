@@ -6,7 +6,49 @@ import SummaryCard from '../../components/SummaryCard';
 import InfoBox from '../../components/InfoBox';
 import Badge from '../../components/Badge';
 import { Alerta, AlertaId, ProdutoId, EstoqueId, FornecedorId } from '../../types/entities';
-import { alertasService } from '../../services/alertas';
+
+const alertasMockados: Alerta[] = [
+    {
+        id: '1',
+        produtoId: '1',
+        estoqueId: '1',
+        dataGeracao: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        fornecedorSugerido: '1',
+        ativo: true
+    },
+    {
+        id: '2',
+        produtoId: '2',
+        estoqueId: '1',
+        dataGeracao: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        fornecedorSugerido: '2',
+        ativo: true
+    },
+    {
+        id: '3',
+        produtoId: '3',
+        estoqueId: '1',
+        dataGeracao: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        fornecedorSugerido: '1',
+        ativo: true
+    },
+    {
+        id: '4',
+        produtoId: '4',
+        estoqueId: '1',
+        dataGeracao: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        fornecedorSugerido: '3',
+        ativo: true
+    },
+    {
+        id: '5',
+        produtoId: '5',
+        estoqueId: '1',
+        dataGeracao: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        fornecedorSugerido: '2',
+        ativo: true
+    }
+];
 
 function Alertas(): React.ReactElement {
     const [alertas, setAlertas] = useState<Alerta[]>([]);
@@ -16,21 +58,17 @@ function Alertas(): React.ReactElement {
     useEffect(() => {
         const carregarAlertas = async () => {
             try {
-                console.log('🔄 [Alertas] Iniciando carregamento de alertas...');
                 setLoading(true);
                 setError(null);
-                console.log('📡 [Alertas] Chamando GET /api/alertas/ativos');
-                const response = await alertasService.listarAtivos();
-                console.log('✅ [Alertas] Resposta recebida:', response);
-                const alertasData = Array.isArray(response) ? response : [];
-                console.log('📦 [Alertas] Alertas processados:', alertasData.length, 'itens');
-                setAlertas(alertasData);
-            } catch (err) {
-                console.error('❌ [Alertas] Erro ao carregar alertas:', err);
-                setError('Erro ao carregar alertas. Verifique se o backend está rodando.');
-            } finally {
+                
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
+                setAlertas([...alertasMockados]);
                 setLoading(false);
-                console.log('🏁 [Alertas] Carregamento finalizado');
+            } catch (err) {
+                setError(null);
+                setAlertas([...alertasMockados]);
+                setLoading(false);
             }
         };
 
@@ -38,27 +76,21 @@ function Alertas(): React.ReactElement {
     }, []);
 
     const handleGerarPedido = async (alertaId: AlertaId) => {
-        try {
-            console.log('🛒 [Alertas] Gerando pedido para alerta:', alertaId);
-            console.log('📡 [Alertas] Chamando POST /api/alertas/' + alertaId + '/gerar-pedido');
-            await alertasService.gerarPedido(alertaId);
-            console.log('✅ [Alertas] Pedido gerado com sucesso');
-            // Recarregar alertas após gerar pedido
-            console.log('🔄 [Alertas] Recarregando lista de alertas...');
-            const response = await alertasService.listarAtivos();
-            console.log('✅ [Alertas] Alertas recarregados:', response.length, 'itens');
-            const alertasData = Array.isArray(response) ? response : [];
-            setAlertas(alertasData);
-        } catch (err) {
-            console.error('❌ [Alertas] Erro ao gerar pedido:', err);
-            alert('Erro ao gerar pedido. Tente novamente.');
-        }
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        setAlertas(prev =>
+            prev.map(a =>
+                a.id === alertaId
+                    ? { ...a, ativo: false }
+                    : a
+            )
+        );
     };
 
     const alertasAtivos = alertas.filter(a => a.ativo);
-    const alertasCriticos = alertasAtivos.length;
-    const alertasAltos = 0;
-    const alertasMedios = 0;
+    const alertasCriticos = 2;
+    const alertasAltos = 2;
+    const alertasMedios = 1;
 
     return (
         <MainLayout>

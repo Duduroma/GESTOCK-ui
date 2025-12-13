@@ -7,7 +7,100 @@ import ActionButton from '../../components/ActionButton';
 import InfoBox from '../../components/InfoBox';
 import CriarPedidoModal from '../../components/Modals/CriarPedidoModal';
 import { Pedido, PedidoId, StatusPedido, ItemPedido } from '../../types/entities';
-import { pedidosService } from '../../services/pedidos';
+
+const pedidosMockados: Pedido[] = [
+    {
+        id: '1',
+        clienteId: '1',
+        fornecedorId: '1',
+        dataCriacao: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        dataPrevistaEntrega: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        estoqueId: '1',
+        itens: [
+            {
+                produtoId: '1',
+                quantidade: 100,
+                precoUnitario: 25.50,
+                subtotal: 2550.00
+            }
+        ],
+        status: StatusPedido.ENVIADO
+    },
+    {
+        id: '2',
+        clienteId: '1',
+        fornecedorId: '2',
+        dataCriacao: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        dataPrevistaEntrega: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000).toISOString(),
+        estoqueId: '1',
+        itens: [
+            {
+                produtoId: '2',
+                quantidade: 50,
+                precoUnitario: 45.00,
+                subtotal: 2250.00
+            },
+            {
+                produtoId: '3',
+                quantidade: 30,
+                precoUnitario: 12.75,
+                subtotal: 382.50
+            }
+        ],
+        status: StatusPedido.EM_TRANSPORTE
+    },
+    {
+        id: '3',
+        clienteId: '1',
+        fornecedorId: '1',
+        dataCriacao: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        dataPrevistaEntrega: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        estoqueId: '1',
+        itens: [
+            {
+                produtoId: '4',
+                quantidade: 200,
+                precoUnitario: 8.90,
+                subtotal: 1780.00
+            }
+        ],
+        status: StatusPedido.RECEBIDO
+    },
+    {
+        id: '4',
+        clienteId: '1',
+        fornecedorId: '3',
+        dataCriacao: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        dataPrevistaEntrega: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        estoqueId: '1',
+        itens: [
+            {
+                produtoId: '5',
+                quantidade: 75,
+                precoUnitario: 32.00,
+                subtotal: 2400.00
+            }
+        ],
+        status: StatusPedido.CRIADO
+    },
+    {
+        id: '5',
+        clienteId: '1',
+        fornecedorId: '2',
+        dataCriacao: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        dataPrevistaEntrega: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        estoqueId: '1',
+        itens: [
+            {
+                produtoId: '1',
+                quantidade: 150,
+                precoUnitario: 24.00,
+                subtotal: 3600.00
+            }
+        ],
+        status: StatusPedido.CANCELADO
+    }
+];
 
 function Pedidos(): React.ReactElement {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,44 +110,21 @@ function Pedidos(): React.ReactElement {
 
     useEffect(() => {
         const carregarPedidos = async () => {
-            try {
-                console.log('🔄 [Pedidos] Iniciando carregamento de pedidos...');
-                setLoading(true);
-                setError(null);
-                console.log('📡 [Pedidos] Chamando GET /api/pedidos');
-                const response = await pedidosService.listar();
-                console.log('✅ [Pedidos] Resposta recebida:', response);
-                const pedidosData = Array.isArray(response) ? response : (response.content || []);
-                console.log('📦 [Pedidos] Pedidos processados:', pedidosData.length, 'itens');
-                setPedidos(pedidosData);
-            } catch (err) {
-                console.error('❌ [Pedidos] Erro ao carregar pedidos:', err);
-                setError('Erro ao carregar pedidos. Verifique se o backend está rodando.');
-            } finally {
-                setLoading(false);
-                console.log('🏁 [Pedidos] Carregamento finalizado');
-            }
+            setLoading(true);
+            setError(null);
+            
+            console.log('🔄 [Pedidos] Carregando dados mockados...');
+            console.log('📦 [Pedidos] Total de pedidos mockados:', pedidosMockados.length);
+            
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            console.log('✅ [Pedidos] Dados mockados carregados:', pedidosMockados);
+            setPedidos([...pedidosMockados]);
+            setLoading(false);
         };
 
         carregarPedidos();
     }, []);
-
-    const recarregarPedidos = async () => {
-        try {
-            console.log('🔄 [Pedidos] Recarregando lista de pedidos...');
-            setLoading(true);
-            console.log('📡 [Pedidos] Chamando GET /api/pedidos');
-            const response = await pedidosService.listar();
-            console.log('✅ [Pedidos] Resposta recebida:', response);
-            const pedidosData = Array.isArray(response) ? response : (response.content || []);
-            console.log('📦 [Pedidos] Pedidos recarregados:', pedidosData.length, 'itens');
-            setPedidos(pedidosData);
-        } catch (err) {
-            console.error('❌ [Pedidos] Erro ao recarregar pedidos:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleConfirm = async (data: {
         clienteId: string;
@@ -63,64 +133,48 @@ function Pedidos(): React.ReactElement {
         itens: ItemPedido[];
         dataPrevistaEntrega: string;
     }) => {
-        try {
-            // O backend espera: clienteId, fornecedorId, produtoId, quantidade, estoqueId (opcional)
-            // Por enquanto, vamos criar com o primeiro item
-            if (data.itens.length > 0) {
-                const primeiroItem = data.itens[0];
-                console.log('➕ [Pedidos] Criando novo pedido...');
-                console.log('📡 [Pedidos] Chamando POST /api/pedidos');
-                console.log('📝 [Pedidos] Dados para criar:', {
-                    clienteId: data.clienteId,
-                    fornecedorId: data.fornecedorId,
-                    produtoId: primeiroItem.produtoId,
-                    quantidade: primeiroItem.quantidade,
-                    estoqueId: data.estoqueId
-                });
-                await pedidosService.criar({
-                    clienteId: data.clienteId,
-                    fornecedorId: data.fornecedorId,
-                    produtoId: primeiroItem.produtoId,
-                    quantidade: primeiroItem.quantidade,
-                    estoqueId: data.estoqueId
-                });
-                console.log('✅ [Pedidos] Pedido criado com sucesso');
-                await recarregarPedidos();
-            }
-        } catch (err) {
-            console.error('❌ [Pedidos] Erro ao criar pedido:', err);
-            alert('Erro ao criar pedido. Tente novamente.');
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        if (data.itens.length > 0) {
+            const novoPedido: Pedido = {
+                id: String(Date.now()),
+                clienteId: data.clienteId,
+                fornecedorId: data.fornecedorId,
+                dataCriacao: new Date().toISOString(),
+                dataPrevistaEntrega: data.dataPrevistaEntrega,
+                estoqueId: data.estoqueId,
+                itens: data.itens.map(item => ({
+                    ...item,
+                    subtotal: item.quantidade * item.precoUnitario
+                })),
+                status: StatusPedido.CRIADO
+            };
+            setPedidos(prev => [...prev, novoPedido]);
         }
     };
 
     const handleConfirmRecebimento = async (pedidoId: PedidoId) => {
-        try {
-            // Por enquanto, vamos usar valores padrão. Em produção, isso viria de um modal ou formulário
-            const estoqueId = '1'; // TODO: obter do pedido ou de um formulário
-            const responsavel = 'Sistema';
-            console.log('✓ [Pedidos] Confirmando recebimento do pedido:', pedidoId);
-            console.log('📡 [Pedidos] Chamando POST /api/pedidos/' + pedidoId + '/receber');
-            console.log('📝 [Pedidos] Dados:', { estoqueId, responsavel });
-            await pedidosService.confirmarRecebimento(pedidoId, { estoqueId, responsavel });
-            console.log('✅ [Pedidos] Recebimento confirmado com sucesso');
-            await recarregarPedidos();
-        } catch (err) {
-            console.error('❌ [Pedidos] Erro ao confirmar recebimento:', err);
-            alert('Erro ao confirmar recebimento. Tente novamente.');
-        }
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        setPedidos(prev =>
+            prev.map(p =>
+                p.id === pedidoId
+                    ? { ...p, status: StatusPedido.RECEBIDO }
+                    : p
+            )
+        );
     };
 
     const handleCancelar = async (pedidoId: PedidoId) => {
-        try {
-            console.log('✕ [Pedidos] Cancelando pedido:', pedidoId);
-            console.log('📡 [Pedidos] Chamando POST /api/pedidos/' + pedidoId + '/cancelar');
-            await pedidosService.cancelar(pedidoId);
-            console.log('✅ [Pedidos] Pedido cancelado com sucesso');
-            await recarregarPedidos();
-        } catch (err) {
-            console.error('❌ [Pedidos] Erro ao cancelar pedido:', err);
-            alert('Erro ao cancelar pedido. Tente novamente.');
-        }
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        setPedidos(prev =>
+            prev.map(p =>
+                p.id === pedidoId
+                    ? { ...p, status: StatusPedido.CANCELADO }
+                    : p
+            )
+        );
     };
 
     return (

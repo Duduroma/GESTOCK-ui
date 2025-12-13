@@ -1,5 +1,4 @@
 import Sidebar from './Sidebar';
-import { useNavigate } from 'react-router-dom';
 import authService from '../services/auth';
 
 interface MainLayoutProps {
@@ -7,11 +6,9 @@ interface MainLayoutProps {
 }
 
 function MainLayout({ children }: MainLayoutProps): React.ReactElement {
-    const navigate = useNavigate();
-
     const handleLogout = () => {
         authService.logout();
-        navigate('/login');
+        window.location.href = '/login';
     };
 
     return (
