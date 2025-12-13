@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import AuthLayout from '../../components/AuthLayout';
 import Logo from '../../components/Logo';
 import Card from '../../components/Card';
@@ -10,8 +10,18 @@ function Login(): React.ReactElement {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [erro, setErro] = useState('');
+    const [sucesso, setSucesso] = useState('');
     const [carregando, setCarregando] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.message) {
+            setSucesso(location.state.message);
+            // Limpar o state para não mostrar a mensagem novamente ao recarregar
+            window.history.replaceState({}, document.title);
+        }
+    }, [location]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -51,6 +61,7 @@ function Login(): React.ReactElement {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        autoComplete="off"
                     />
 
                     <Input
@@ -60,7 +71,22 @@ function Login(): React.ReactElement {
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                         required
+                        autoComplete="off"
                     />
+
+                    {sucesso && (
+                        <div style={{
+                            padding: '12px',
+                            backgroundColor: '#d1fae5',
+                            color: '#065f46',
+                            borderRadius: '8px',
+                            fontSize: '14px',
+                            marginTop: '8px',
+                            marginBottom: '8px'
+                        }}>
+                            {sucesso}
+                        </div>
+                    )}
 
                     {erro && (
                         <div style={{

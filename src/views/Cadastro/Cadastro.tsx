@@ -73,6 +73,7 @@ function Cadastro(): React.ReactElement {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        autoComplete="off"
                     />
 
                     <Input
@@ -82,6 +83,7 @@ function Cadastro(): React.ReactElement {
                         value={senha}
                         onChange={(e) => setSenha(e.target.value)}
                         required
+                        autoComplete="off"
                     />
 
                     {erro && (

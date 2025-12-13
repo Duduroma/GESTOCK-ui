@@ -57,7 +57,28 @@ async function request(endpoint: string, options: RequestOptions = {}): Promise<
             return null;
         }
         
-        const data = await response.json();
+        // Verificar o Content-Type antes de tentar fazer parse JSON
+        const contentType = response.headers.get('content-type');
+        let data: any;
+        
+        if (contentType && contentType.includes('application/json')) {
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                console.error('❌ [API] Erro ao fazer parse do JSON:', jsonError);
+                const text = await response.text();
+                console.error('❌ [API] Resposta em texto:', text);
+                throw new Error(text || 'Erro ao processar resposta do servidor');
+            }
+        } else {
+            // Se não for JSON, ler como texto
+            const text = await response.text();
+            if (!response.ok) {
+                throw new Error(text || 'Erro na requisição');
+            }
+            return text;
+        }
+        
         console.log('📦 [API] Dados da resposta (raw):', data);
         console.log('📦 [API] Tipo da resposta:', typeof data);
         console.log('📦 [API] É array?', Array.isArray(data));
@@ -88,7 +109,9 @@ async function request(endpoint: string, options: RequestOptions = {}): Promise<
                 }
             }
             
-            throw new Error(data.message || 'Erro na requisição');
+            // Tratar diferentes formatos de erro
+            const errorMessage = data?.message || data?.error || (typeof data === 'string' ? data : 'Erro na requisição');
+            throw new Error(errorMessage);
         }
         
         console.log('✅ [API] Requisição bem-sucedida');

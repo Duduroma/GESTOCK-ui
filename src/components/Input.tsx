@@ -5,6 +5,7 @@ interface InputProps {
     value?: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
+    autoComplete?: string;
 }
 
 function Input({ 
@@ -13,7 +14,8 @@ function Input({
     placeholder, 
     value, 
     onChange,
-    required = false
+    required = false,
+    autoComplete
 }: InputProps): React.ReactElement {
     return (
         <div style={{ marginBottom: '20px' }}>
@@ -32,7 +34,7 @@ function Input({
                 value={value}
                 onChange={onChange}
                 required={required}
-                autoComplete="off"
+                autoComplete={autoComplete}
                 style={{
                     width: '100%',
                     padding: '12px',
