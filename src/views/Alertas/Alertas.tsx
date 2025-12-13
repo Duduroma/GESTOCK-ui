@@ -110,7 +110,7 @@ function Alertas(): React.ReactElement {
             )}
 
             {!loading && !error && (
-                <Table headers={['Produto', 'Estoque', 'Fornecedor Sugerido', 'Data do Alerta', 'Ações']}>
+            <Table headers={['Produto', 'Estoque', 'Fornecedor Sugerido', 'Data do Alerta', 'Ações']}>
                     {alertasAtivos.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={5} style={{ textAlign: 'center', color: '#6b7280' }}>
@@ -158,7 +158,7 @@ function Alertas(): React.ReactElement {
                     </TableRow>
                         ))
                     )}
-                </Table>
+            </Table>
             )}
 
             <InfoBox

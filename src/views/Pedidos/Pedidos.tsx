@@ -155,7 +155,7 @@ function Pedidos(): React.ReactElement {
             )}
 
             {!loading && !error && (
-                <Table headers={['ID', 'Itens', 'Fornecedor', 'Data Criação', 'Data Prevista', 'Status', 'Ações']}>
+            <Table headers={['ID', 'Itens', 'Fornecedor', 'Data Criação', 'Data Prevista', 'Status', 'Ações']}>
                     {pedidos.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={7} style={{ textAlign: 'center', color: '#6b7280' }}>
@@ -206,7 +206,7 @@ function Pedidos(): React.ReactElement {
                     </TableRow>
                         ))
                     )}
-                </Table>
+            </Table>
             )}
 
             <InfoBox

@@ -83,7 +83,7 @@ function Fornecedores(): React.ReactElement {
         ativo: boolean;
     }) => {
         try {
-            if (fornecedorEditando) {
+        if (fornecedorEditando) {
                 console.log('✏️ [Fornecedores] Editando fornecedor:', fornecedorEditando.id);
                 console.log('📡 [Fornecedores] Chamando PUT /api/fornecedores/' + fornecedorEditando.id);
                 console.log('📝 [Fornecedores] Dados para atualizar:', { nome: data.nome, contato: data.contato });
@@ -99,11 +99,11 @@ function Fornecedores(): React.ReactElement {
                 console.log('📡 [Fornecedores] Chamando POST /api/fornecedores');
                 console.log('📝 [Fornecedores] Dados para criar:', data);
                 await fornecedoresService.criar({
-                    nome: data.nome,
-                    cnpj: data.cnpj,
-                    contato: data.contato,
+                        nome: data.nome,
+                        cnpj: data.cnpj,
+                        contato: data.contato,
                     leadTimeMedio: { dias: data.leadTimeMedio } as LeadTime,
-                    ativo: data.ativo
+                        ativo: data.ativo
                 });
                 console.log('✅ [Fornecedores] Fornecedor criado com sucesso');
                 await recarregarFornecedores();
@@ -147,7 +147,7 @@ function Fornecedores(): React.ReactElement {
             )}
 
             {!loading && !error && (
-                <Table headers={['Nome', 'CNPJ', 'Contato', 'Lead Time (dias)', 'Status', 'Ações']}>
+            <Table headers={['Nome', 'CNPJ', 'Contato', 'Lead Time (dias)', 'Status', 'Ações']}>
                     {fornecedores.length === 0 ? (
                         <TableRow>
                             <TableCell colSpan={6} style={{ textAlign: 'center', color: '#6b7280' }}>
@@ -192,7 +192,7 @@ function Fornecedores(): React.ReactElement {
                     </TableRow>
                         ))
                     )}
-                </Table>
+            </Table>
             )}
 
             <CadastrarFornecedorModal
